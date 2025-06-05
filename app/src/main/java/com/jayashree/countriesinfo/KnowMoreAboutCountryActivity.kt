@@ -1,64 +1,82 @@
 package com.jayashree.countriesinfo
 
 import NetworkLayer.CountryDecsription
-import NetworkLayer.RetrofitInstance
 import android.content.Intent
-import android.graphics.Paint
 import android.os.Bundle
-import android.widget.TextView
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 
 class KnowMoreAboutCountryActivity : AppCompatActivity() {
+    var viewModel:CountryListViewModel? = null
+    var mCountryDecsription:CountryDecsription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_know_more_about_country)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
+        viewModel = ViewModelProvider(this).get(CountryListViewModel::class.java)
+        //mCountryDecsription = viewModel?.fetchCountryDescription(selectedCountry)
         val intent = intent
         val selectedCountry = intent.getStringExtra("CountryName")?:"default"
-        RetrofitInstance.countryDescriptionrequest.getCountryDescription(selectedCountry).enqueue(
-            object : Callback<CountryDecsription> {
-                override fun onResponse(
-                    call: Call<CountryDecsription>,
-                    response: Response<CountryDecsription>
-                ) {
-                    if(response.isSuccessful){
-                        val countryDescription = response.body()
-                        val title = countryDescription?.title
-                        val summary = countryDescription?.description + " " + countryDescription?.extract
-                        val titleTextview:TextView = findViewById(R.id.title_text)
-                        titleTextview.setText(title)
-                        val summaryTextView : TextView = findViewById(R.id.summary_text)
-                        summaryTextView.setText(summary)
-                        val urlTextView : TextView = findViewById(R.id.url_text)
-                        urlTextView.paintFlags = urlTextView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-                        urlTextView.setText(countryDescription?.url)
-                        urlTextView.setOnClickListener{
-                            val intent = Intent(Intent.ACTION_VIEW, countryDescription?.url?.toUri())
-                            startActivity(intent)
-                        }
-
-                    }
+        viewModel?.fetchCountryDescription(selectedCountry)
+        viewModel?.countryDescriptionLiveData?.observe(this, Observer {countryDescription->
+            if(countryDescription != null){
+                mCountryDecsription = countryDescription
+                setContent{
+                    ShowTextAboutCountry()
                 }
+            }
 
-                override fun onFailure(call: Call<CountryDecsription>, t: Throwable) {
-                    TODO("Not yet implemented")
-                }
+        })
 
-            })
+
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun ShowTextAboutCountry(){
+       Scaffold(
+           topBar = {
+               mCountryDecsription?.let { CenterAlignedTopAppBar(title = { Text(mCountryDecsription?.title?:"Title") }) }?:Text(text = "Data not available")
+           },
+           content = { innerPadding ->
+               ShowCountryDescriptionText(modifier = Modifier.padding(innerPadding))
+           }
+       )
+
+    }
+
+    @Composable
+    fun ShowCountryDescriptionText(modifier: Modifier = Modifier){
+        Column(modifier = modifier) {
+            mCountryDecsription?.let { Text(text = mCountryDecsription?.description?:"Description  Not available", color = Color.Black, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold) }?:Text(text = "Data not available")
+            mCountryDecsription?.let { Text(text = mCountryDecsription?.extract?:"Extract  Not available", color = Color.Black, fontSize = 15.sp) }?:Text(text = "Data not available")
+
+            mCountryDecsription?.let { Text(text = mCountryDecsription?.url?:"URL Not available",
+                color = Color.Blue,
+                fontSize = 15.sp,
+                modifier = Modifier.clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, mCountryDecsription?.url?.toUri())
+                    startActivity(intent)
+            }) }?:Text(text = "Data not available")
+        }
 
     }
 }

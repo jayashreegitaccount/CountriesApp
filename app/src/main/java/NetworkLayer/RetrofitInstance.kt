@@ -6,14 +6,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
 
-    public val retrofit by lazy {
+     val retrofit by lazy {
         Retrofit.Builder().baseUrl("https://restcountries.com/v3.1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(CountriesAPI :: class.java)
     }
 
-    public val countryDescriptionrequest by lazy {
+     val countryDescriptionrequest by lazy {
 
         Retrofit.Builder().baseUrl("https://en.wikipedia.org/api/rest_v1/")
             .addConverterFactory(GsonConverterFactory.create())
