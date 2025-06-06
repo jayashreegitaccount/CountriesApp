@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -61,7 +62,12 @@ dependencies {
 
     // Activity & Lifecycle (Compose specific versions are often better if primarily Compose)
     implementation("androidx.activity:activity-compose:1.9.0") // Or latest stable
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5") // Or latest stable
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5")
+    implementation(libs.androidx.activity)
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid) // Or latest stable
 
     // Compose
     // Use a STABLE Compose BOM

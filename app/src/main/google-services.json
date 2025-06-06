@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "263279660830",
+    "project_id": "countriesinfo-adbbb",
+    "storage_bucket": "countriesinfo-adbbb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263279660830:android:a25f2236f053a12aadc30f",
+        "android_client_info": {
+          "package_name": "com.jayashree.countriesinfo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263279660830-6f4a7nefo20u45vn6t5ls6d2gnvtd33j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jayashree.countriesinfo",
+            "certificate_hash": "1ccea7c5b5dcb61159c3058c10ed6e4a767f76d8"
+          }
+        },
+        {
+          "client_id": "263279660830-mlfo7ia52aakf8g1stp1lchplluk7d5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0QReDDD24_sfv0zQo4i1ZNj7pwm1Lv0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263279660830-mlfo7ia52aakf8g1stp1lchplluk7d5j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
